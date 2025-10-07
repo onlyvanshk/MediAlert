@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Setup Your Profile | MediAlert</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <script src="theme.js"></script>
+    <style>
+      html, body { height: auto; overflow: auto; }
+      body { background-color: var(--bg-color); }
+      .setup-wrapper { width: 100%; max-width: 700px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+      .setup-wrapper.fade-out { opacity: 0; transition: opacity 0.5s ease-out; }
+      .logo-header { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; color: var(--text-color); }
+      .form-section { padding: 2.5rem; }
+      .form-section h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+      .form-section p { color: var(--text-light); margin-bottom: 2rem; }
+      textarea.input-field { width: 100%; min-height: 100px; resize: vertical; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); }
+      .age-group-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
+      .age-group-selector input[type="radio"] { display: none; }
+      .age-group-selector label { display: block; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; text-align: center; font-weight: 600; cursor: pointer; transition: all 0.2s ease-in-out; }
+      .age-group-selector input[type="radio"]:checked + label { background-color: var(--primary-color); border-color: var(--primary-color); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+      .contact-field-group { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+      .remove-contact-btn { background: transparent; border: none; color: #ef4444; font-size: 1.2rem; cursor: pointer; }
+      .add-contact-btn { background: transparent; border: 1px dashed var(--primary-color); color: var(--primary-color); width: 100%; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+      .carousel-container { position: relative; overflow: hidden; }
+      .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
+      .carousel-track .form-section { width: 100%; flex-shrink: 0; box-sizing: border-box; }
+      .carousel-nav { display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2.5rem; }
+      .carousel-nav button { background-color: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: opacity 0.3s; }
+      .carousel-nav button.is-hidden { opacity: 0; pointer-events: none; }
+      .dots-container { display: flex; justify-content: center; gap: 12px; margin-top: 1.5rem; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; background-color: var(--border-color); transition: background-color 0.3s, transform 0.3s; }
+      .dot.current-slide { background-color: var(--primary-color); transform: scale(1.2); }
+      
+      @media (min-width: 768px) {
+        .carousel-container { overflow: visible; }
+        .carousel-track {
+          display: grid;
+          gap: 2rem;
+        }
+        .carousel-nav, .dots-container { display: none; }
+        .form-section {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .form-section.visible { opacity: 1; transform: translateY(0); }
+      }
+
+      .loading-container { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-color); position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 100; }
+      .loading-container i { font-size: 3rem; color: var(--primary-color); animation: spin 1.5s linear infinite; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      .hidden { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div id="setup-wrapper" class="setup-wrapper">
+      <div class="logo-header">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <h2>MediAlert</h2>
+      </div>
+      <form id="personal-details-form">
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <div class="card form-section">
+              <h3>1. Personal Details</h3>
+              <p>Let's start with the basics. This information helps us tailor your experience.</p>
+              <div class="form-group"><label for="user-name">Full Name</label><input type="text" id="user-name" class="form-group input" placeholder="e.g., Alex Doe" required></div>
+              <div class="form-group"><label>Select your age group</label>
+                <div class="age-group-selector">
+                  <div><input type="radio" id="age1" name="age-group" value="18-35" required><label for="age1">18-35</label></div>
+                  <div><input type="radio" id="age2" name="age-group" value="36-60"><label for="age2">36-60</label></div>
+                  <div><input type="radio" id="age3" name="age-group" value="61+"><label for="age3">61+</label></div>
+                </div>
+              </div>
+            </div>
+            <div class="card form-section">
+              <h3>2. Medical Information</h3>
+              <p>This is confidential and helps in providing relevant insights.</p>
+              <div class="form-group"><label for="user-conditions">Chronic Conditions</label><textarea id="user-conditions" class="input-field" placeholder="e.g., Type 2 Diabetes..."></textarea></div>
+              <div class="form-group"><label for="user-allergies">Allergies</label><textarea id="user-allergies" class="input-field" placeholder="e.g., Penicillin..."></textarea></div>
+            </div>
+            <div class="card form-section">
+              <h3>3. Contact Information</h3>
+              <p>Your number is kept private. Family contacts are for emergency purposes.</p>
+              <div class="form-group"><label for="user-phone">Your Phone Number</label><input type="tel" id="user-phone" class="form-group input" placeholder="Your mobile number" required></div>
+              <div class="form-group"><label>Family Member's Number (Optional)</label>
+                <div id="family-contacts-container">
+                  <div class="contact-field-group"><input type="tel" class="form-group input family-phone" placeholder="Family member's number"></div>
+                </div>
+                <button type="button" id="add-contact-btn" class="add-contact-btn"><i class="fas fa-plus"></i> Add Another</button>
+              </div>
+            </div>
+            <div class="card form-section" style="text-align: center;">
+              <h3>4. You're all set!</h3>
+              <p>Click below to complete your setup and go to your new dashboard.</p>
+              <button type="submit" class="submit-btn" style="width:100%; max-width: 300px; margin: 0 auto;">Complete Setup</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-nav">
+            <button type="button" class="prev-btn is-hidden">Previous</button>
+            <button type="button" class="next-btn">Next</button>
+        </div>
+        <div class="dots-container"></div>
+      </form>
+    </div>
+
+    <div id="loading-container" class="loading-container hidden">
+      <i class="fas fa-spinner"></i><h3>Preparing your personalised dashboard...</h3><p>This will only take a moment.</p>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const setupWrapper = document.getElementById('setup-wrapper');
+        const loadingContainer = document.getElementById('loading-container');
+        const form = document.getElementById('personal-details-form');
+        const addContactBtn = document.getElementById('add-contact-btn');
+        const familyContactsContainer = document.getElementById('family-contacts-container');
+
+        // --- NEW: DYNAMIC RESIZE HANDLING ---
+
+        const mediaQuery = window.matchMedia('(max-width: 767px)');
+        let scrollObserver = null;
+        let carousel = null;
+
+        // Function to set up the mobile carousel
+        const setupCarousel = () => {
+            const track = document.querySelector('.carousel-track');
+            const slides = Array.from(track.children);
+            const nextBtn = document.querySelector('.next-btn');
+            const prevBtn = document.querySelector('.prev-btn');
+            const dotsContainer = document.querySelector('.dots-container');
+            
+            dotsContainer.innerHTML = ''; // Clear existing dots
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('current-slide');
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = Array.from(dotsContainer.children);
+            let currentIndex = 0;
+
+            const updateNav = () => {
+                prevBtn.classList.toggle('is-hidden', currentIndex === 0);
+                nextBtn.classList.toggle('is-hidden', currentIndex === slides.length - 1);
+                dots.forEach(dot => dot.classList.remove('current-slide'));
+                dots[currentIndex].classList.add('current-slide');
+            };
+
+            const moveToSlide = (targetIndex) => {
+                const slideWidth = slides[0].getBoundingClientRect().width;
+                track.style.transform = `translateX(-${slideWidth * targetIndex}px)`;
+                currentIndex = targetIndex;
+                updateNav();
+            };
+
+            const handleNext = () => { if (currentIndex < slides.length - 1) moveToSlide(currentIndex + 1); };
+            const handlePrev = () => { if (currentIndex > 0) moveToSlide(currentIndex - 1); };
+            const handleDotClick = (e) => {
+                const targetDot = e.target.closest('.dot');
+                if (!targetDot) return;
+                const targetIndex = dots.findIndex(dot => dot === targetDot);
+                moveToSlide(targetIndex);
+            };
+
+            nextBtn.addEventListener('click', handleNext);
+            prevBtn.addEventListener('click', handlePrev);
+            dotsContainer.addEventListener('click', handleDotClick);
+            
+            // Initial setup
+            moveToSlide(0);
+
+            // Return a 'destroy' function to clean up
+            return () => {
+                track.style.transform = 'translateX(0)';
+                nextBtn.removeEventListener('click', handleNext);
+                prevBtn.removeEventListener('click', handlePrev);
+                dotsContainer.removeEventListener('click', handleDotClick);
+            };
+        };
+
+        // Function to set up PC scroll animations
+        const setupScrollAnimation = () => {
+            const formSections = document.querySelectorAll('.form-section');
+            scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+            formSections.forEach(section => scrollObserver.observe(section));
+            
+            // Return a 'destroy' function to clean up
+            return () => {
+                if (scrollObserver) {
+                    scrollObserver.disconnect();
+                    scrollObserver = null;
+                }
+            };
+        };
+
+        // The main handler that switches between layouts
+        const handleScreenChange = (e) => {
+            // Clean up previous setup first
+            if (carousel) carousel();
+            if (scrollObserver) scrollObserver();
+
+            if (e.matches) { // If we are on mobile
+                carousel = setupCarousel();
+            } else { // If we are on desktop
+                scrollObserver = setupScrollAnimation();
+            }
+        };
+
+        // Add the listener for screen size changes
+        mediaQuery.addEventListener('change', handleScreenChange);
+
+        // Initial check on page load
+        handleScreenChange(mediaQuery);
+
+
+        // --- Other event listeners (unchanged) ---
+        addContactBtn.addEventListener('click', () => { /* ... unchanged ... */
+            const newContactField = document.createElement('div');
+            newContactField.className = 'contact-field-group';
+            newContactField.innerHTML = `
+                <input type="tel" class="form-group input family-phone" placeholder="Another family number">
+                <button type="button" class="remove-contact-btn"><i class="fas fa-times-circle"></i></button>`;
+            familyContactsContainer.appendChild(newContactField);
+            newContactField.querySelector('.remove-contact-btn').addEventListener('click', () => { newContactField.remove(); });
+        });
+
+        form.addEventListener('submit', (e) => { /* ... unchanged ... */
+          e.preventDefault();
+          const userProfile = {
+            name: document.getElementById('user-name').value, phone: document.getElementById('user-phone').value,
+            familyPhones: Array.from(document.querySelectorAll('.family-phone')).map(input => input.value.trim()).filter(phone => phone !== ''),
+            ageGroup: document.querySelector('input[name="age-group"]:checked').value,
+            conditions: document.getElementById('user-conditions').value, allergies: document.getElementById('user-allergies').value
+          };
+          localStorage.setItem('mediAlert-userProfile', JSON.stringify(userProfile));
+          localStorage.setItem('mediAlert-userName', userProfile.name);
+          document.body.style.overflow = 'hidden';
+          setupWrapper.classList.add('fade-out');
+          setTimeout(() => {
+            setupWrapper.classList.add('hidden');
+            loadingContainer.classList.remove('hidden');
+            setTimeout(() => { window.location.href = 'index.html'; }, 3500);
+          }, 500);
+        });
+      });
+    </script>
+  </body>
+</html>

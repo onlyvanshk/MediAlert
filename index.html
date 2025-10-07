@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediAlert Web Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+    <style>
+      main.main-content > header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header-streak {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-decoration: none; /* Link se underline hatane ke liye */
+      }
+      .header-streak:hover {
+        background-color: #eef2ff;
+      }
+      .header-streak .streak-icon {
+        font-size: 1.2rem;
+        color: #f59e0b;
+        animation: flame-flicker 1.5s infinite linear;
+      }
+      .header-streak #streak-count {
+        font-size: 1.1rem;
+        color: var(--text-color);
+      }
+      @keyframes flame-flicker {
+        0%,
+        100% {
+          transform: scale(1) rotate(-1deg);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.05) rotate(1deg);
+          opacity: 0.9;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h2>MediAlert</h2>
+        </div>
+        <ul class="nav-links">
+          <li class="active">
+            <a href="index.html"
+              ><i class="fa-solid fa-table-columns"></i><span>Dashboard</span></a
+            >
+          </li>
+          <li>
+            <a href="add-medicine.html"
+              ><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a
+            >
+          </li>
+          <li>
+            <a href="journal.html"
+              ><i class="fa-solid fa-book-medical"></i><span>Journal</span></a
+            >
+          </li>
+          <li>
+            <a href="insight.html"
+              ><i class="fa-solid fa-chart-line"></i
+              ><span>Health Insights</span></a
+            >
+          </li>
+           <!-- NEW COMMUNITY LINK -->
+          <li>
+            <a href="community.html"
+              ><i class="fa-solid fa-users"></i><span>Community</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"><i class="fa-solid fa-file-pdf"></i><span>Report</span></a>
+          </li>
+           <!-- NEW SUBSCRIPTION LINK -->
+          <li class="nav-item-premium">
+            <a href="subscription.html"
+              ><i class="fa-solid fa-crown"></i><span>Subscription</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><i class="fa-solid fa-gear"></i><span>Settings</span></a
+            >
+          </li>
+        </ul>
+        <div class="user-profile">
+          <div class="user-info">
+            <h4 id="sidebar-user-name">Guest</h4>
+            <small id="sidebar-user-email">email@example.com</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header>
+          <div class="header-text">
+            <h1>Dashboard</h1>
+            <p>Welcome back, Alex!</p>
+          </div>
+          <a href="streak.html" class="header-streak" title="View your streak history!">
+            <i class="fa-solid fa-fire-flame-curved streak-icon"></i>
+            <span id="streak-count">0</span>
+          </a>
+        </header>
+
+        <div class="card" id="combined-vitals-card">
+          <div class="card-header">
+            <h3>Track Your Vitals</h3>
+          </div>
+          <div class="vitals-content">
+            <div class="vital-item" id="bp-item">
+              <div class="vital-item-header">
+                <div class="icon-bg" id="bp-icon-bg">
+                  <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <h4>Blood Pressure</h4>
+                <button class="edit-btn" aria-label="Edit Blood Pressure">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+              <div class="vital-item-body">
+                <p class="value">
+                  <span class="value-display">120/80</span>
+                  <input
+                    type="text"
+                    class="value-input hidden"
+                    value="120/80"
+                  />
+                  <span class="unit">mmHg</span>
+                </p>
+              </div>
+              <div class="vital-item-footer">
+                <span class="status-dot"></span>
+                <p>Normal</p>
+              </div>
+            </div>
+            <div class="vital-divider"></div>
+            <div class="vital-item" id="bs-item">
+              <div class="vital-item-header">
+                <div class="icon-bg" id="bs-icon-bg">
+                  <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h4>Blood Sugar</h4>
+                <button class="edit-btn" aria-label="Edit Blood Sugar">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+              <div class="vital-item-body">
+                <p class="value">
+                  <span class="value-display">90</span>
+                  <input type="text" class="value-input hidden" value="90" />
+                  <span class="unit">mg/dL</span>
+                </p>
+              </div>
+              <div class="vital-item-footer">
+                <span class="status-dot"></span>
+                <p>Normal</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="card" id="today-schedule">
+            <div class="card-header">
+              <h3>Today's Schedule</h3>
+              <button id="add-med-btn" class="add-btn">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <ul id="meds-list"></ul>
+          </div>
+
+          <div class="card" id="vitals-chart-card">
+            <h3>Vitals Overview (Weekly)</h3>
+            <div class="chart-container">
+              <canvas id="vitalsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card" id="quick-actions-card">
+            <h3>Quick Actions</h3>
+            <button class="action-btn mood-btn">
+              <i class="fa-regular fa-face-smile"></i> Log Mood/Symptoms
+            </button>
+            <button class="action-btn ai-btn">
+              <i class="fa-solid fa-robot"></i> Ask AI Assistant
+            </button>
+            <button class="action-btn report-btn">
+              <i class="fa-solid fa-download"></i> Get Weekly Report
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Add Quick Medicine for Today</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <form id="add-med-form">
+          <div class="form-group">
+            <label for="med-name">Medicine Name</label>
+            <input
+              type="text"
+              id="med-name"
+              required
+              placeholder="e.g., Ibuprofen"
+            />
+          </div>
+          <div class="form-group">
+            <label for="med-dosage">Dosage</label>
+            <input
+              type="text"
+              id="med-dosage"
+              required
+              placeholder="e.g., 200mg"
+            />
+          </div>
+          <div class="form-group">
+            <label for="med-time">Time</label>
+            <input type="time" id="med-time" required />
+          </div>
+          <button type="submit" class="submit-btn">Add Medicine</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js">
+      
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const handleDailyStreak = () => {
+          const headerStreakCountEl = document.getElementById('streak-count');
+          if (!headerStreakCountEl) return;
+
+          let streakData = JSON.parse(localStorage.getItem('streakData')) || {
+            current: 0,
+            lastVisit: null,
+          };
+
+          const today = new Date();
+          const todayDateString = today.toISOString().split('T')[0];
+          const lastVisitDateString = streakData.lastVisit;
+          
+          if (lastVisitDateString !== todayDateString) {
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+            const yesterdayDateString = yesterday.toISOString().split('T')[0];
+
+            if (lastVisitDateString === yesterdayDateString) {
+              streakData.current++;
+            } else {
+              streakData.current = 1;
+            }
+            
+            streakData.lastVisit = todayDateString;
+            localStorage.setItem('streakData', JSON.stringify(streakData));
+          }
+          
+          headerStreakCountEl.textContent = streakData.current;
+        };
+
+        handleDailyStreak();
+      });
+    </script>
+  </body>
+</html>

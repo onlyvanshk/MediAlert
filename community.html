@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Hub - MediAlert</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+    <style>
+      .community-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      @media (min-width: 992px) {
+        .community-layout {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+      .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 600px;
+      }
+      .chat-window {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+        background-color: var(--bg-color);
+        border-radius: 12px 12px 0 0;
+        border: 1px solid var(--border-color);
+      }
+      .message {
+        display: flex;
+        margin-bottom: 1rem;
+        max-width: 80%;
+      }
+      .message-bubble {
+        padding: 0.75rem 1rem;
+        border-radius: 18px;
+        line-height: 1.5;
+      }
+      .message.user {
+        margin-left: auto;
+        flex-direction: row-reverse;
+      }
+      .message.user .message-bubble {
+        background-color: var(--primary-color);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+      .message.other .message-bubble {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--border-color);
+        border-bottom-left-radius: 4px;
+      }
+      .message-sender {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: var(--text-light);
+      }
+      .chat-input-form {
+        display: flex;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+      }
+      #chat-input {
+        flex-grow: 1;
+        border: none;
+        background: none;
+        padding: 0.75rem;
+        color: var(--text-color);
+      }
+      #chat-input:focus {
+        outline: none;
+      }
+      #send-btn {
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      /* Discussion Forum Styles */
+      .discussion-list .discussion-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        transition: background-color 0.2s;
+        cursor: pointer;
+      }
+      .discussion-list .discussion-item:hover {
+        background-color: var(--bg-color);
+      }
+      .discussion-list .discussion-item:last-child {
+        border-bottom: none;
+      }
+      .discussion-item .icon {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+      }
+      .discussion-item h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.1rem;
+      }
+      .discussion-item p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-light);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h2>MediAlert</h2>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"
+              ><i class="fa-solid fa-table-columns"></i
+              ><span>Dashboard</span></a
+            >
+          </li>
+          <li>
+            <a href="add-medicine.html"
+              ><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a
+            >
+          </li>
+          <li>
+            <a href="journal.html"
+              ><i class="fa-solid fa-book-medical"></i><span>Journal</span></a
+            >
+          </li>
+          <li>
+            <a href="insight.html"
+              ><i class="fa-solid fa-chart-line"></i
+              ><span>Health Insights</span></a
+            >
+          </li>
+          <!-- NEW COMMUNITY LINK -->
+          <li class="active">
+            <a href="community.html"
+              ><i class="fa-solid fa-users"></i><span>Community</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"
+              ><i class="fa-solid fa-file-pdf"></i><span>Report</span></a
+            >
+          </li>
+
+          <li class="nav-item-premium">
+            <a href="subscription.html"
+              ><i class="fa-solid fa-crown"></i><span>Subscription</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><i class="fa-solid fa-gear"></i><span>Settings</span></a
+            >
+          </li>
+        </ul>
+        <div class="user-profile">
+          <div class="user-info">
+            <h4 id="sidebar-user-name">Guest</h4>
+            <small id="sidebar-user-email">email@example.com</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header>
+          <h1>Community Hub</h1>
+          <p>Connect with others and share your journey.</p>
+        </header>
+
+        <div class="community-layout">
+          <div class="main-column">
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-comments"></i> Live Chat</h3>
+              </div>
+              <div class="chat-container">
+                <div class="chat-window" id="chat-window">
+                  <!-- Messages will be dynamically added here -->
+                </div>
+                <form class="chat-input-form" id="chat-form">
+                  <input
+                    type="text"
+                    id="chat-input"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                  />
+                  <button type="submit" id="send-btn" aria-label="Send Message">
+                    <i class="fa-solid fa-paper-plane"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 2rem">
+              <div class="card-header">
+                <h3>
+                  <i class="fa-solid fa-users-line"></i> Discussion Forums
+                </h3>
+              </div>
+              <div class="discussion-list">
+                <div class="discussion-item">
+                  <div class="icon">
+                    <i class="fa-solid fa-hand-holding-droplet"></i>
+                  </div>
+                  <div>
+                    <h4>Managing Blood Pressure</h4>
+                    <p>Share tips and experiences on keeping BP in check.</p>
+                  </div>
+                </div>
+                <div class="discussion-item">
+                  <div class="icon"><i class="fa-solid fa-brain"></i></div>
+                  <div>
+                    <h4>Mental Wellness & Chronic Illness</h4>
+                    <p>A safe space to discuss the mental side of health.</p>
+                  </div>
+                </div>
+                <div class="discussion-item">
+                  <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+                  <div>
+                    <h4>Healthy Eating Habits</h4>
+                    <p>Share recipes and diet tips that work for you.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-column">
+            <div class="card">
+              <div class="card-header">
+                <h4>
+                  <i class="fa-solid fa-shield-halved"></i> Community Guidelines
+                </h4>
+              </div>
+              <ul class="info-list">
+                <li>Be respectful and supportive.</li>
+                <li>Do not share personal medical advice.</li>
+                <li>No spam or advertisements.</li>
+                <li>Keep conversations constructive.</li>
+              </ul>
+            </div>
+            <div class="card" style="margin-top: 2rem">
+              <div class="card-header">
+                <h4>
+                  <i class="fa-solid fa-calendar-star"></i> Upcoming Events
+                </h4>
+              </div>
+              <p>
+                <strong>Expert Q&A with Dr. Priya Sharma</strong><br />Topic:
+                Diabetes Management<br />Date: Oct 5, 2025
+              </p>
+            </div>
+            <div class="card" style="margin-top: 2rem">
+              <div class="card-header">
+                <h4><i class="fa-solid fa-chart-pie"></i> Community Poll</h4>
+              </div>
+              <p>What's your biggest health challenge?</p>
+              <form class="poll-form">
+                <label
+                  ><input type="radio" name="poll" value="diet" /> Sticking to a
+                  diet</label
+                >
+                <label
+                  ><input type="radio" name="poll" value="exercise" /> Regular
+                  exercise</label
+                >
+                <label
+                  ><input type="radio" name="poll" value="meds" /> Remembering
+                  meds</label
+                >
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chatWindow = document.getElementById("chat-window");
+        const chatForm = document.getElementById("chat-form");
+        const chatInput = document.getElementById("chat-input");
+
+        const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    
+        // If no one is logged in, redirect to the login page
+        if (!loggedInUserEmail) {
+            window.location.href = 'login.html';
+            return; // Stop the script from running further
+        }
+
+        // Load settings specific to the logged-in user
+        const userSettings = JSON.parse(localStorage.getItem(`userSettings_${loggedInUserEmail}`)) || {};
+        const displayName = userSettings.userName || 'Guest';
+        
+        // Update sidebar
+        document.getElementById('sidebar-user-name').textContent = displayName;
+        document.getElementById('sidebar-user-email').textContent = loggedInUserEmail;
+
+        const mockMessages = [
+          {
+            sender: "other",
+            name: "Rohan",
+            text: "Hey everyone! Glad to be here.",
+          },
+          {
+            sender: "other",
+            name: "Priya",
+            text: "Welcome, Rohan! This is a great community.",
+          },
+        ];
+
+        function addMessage(sender, name, text) {
+          const messageDiv = document.createElement("div");
+          messageDiv.classList.add("message", sender);
+
+          messageDiv.innerHTML = `
+                    <div>
+                        <div class="message-sender">${
+                          sender === "user" ? "You" : name
+                        }</div>
+                        <div class="message-bubble">${text}</div>
+                    </div>
+                `;
+          chatWindow.appendChild(messageDiv);
+          chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll to bottom
+        }
+
+        // Load initial messages
+        mockMessages.forEach((msg) =>
+          addMessage(msg.sender, msg.name, msg.text)
+        );
+
+        chatForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const userMessage = chatInput.value.trim();
+          if (userMessage) {
+            addMessage("user", "You", userMessage);
+            chatInput.value = "";
+
+            // Simulate a reply after a short delay
+            setTimeout(() => {
+              addMessage("other", "Aisha", "That's a great point!");
+            }, 1500);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

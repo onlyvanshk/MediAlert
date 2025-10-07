@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - MediAlert</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+     <style>
+        .settings-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .settings-layout {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+        .settings-nav {
+            display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+        @media (min-width: 768px) {
+            .settings-nav {
+                flex-direction: column;
+                width: 200px;
+                flex-shrink: 0;
+            }
+        }
+        .settings-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        .settings-nav-btn:hover {
+            background-color: var(--hover-color);
+            color: var(--text-color);
+        }
+        .settings-nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .settings-content {
+            flex-grow: 1;
+        }
+        .settings-panel {
+            display: none;
+        }
+        .settings-panel.active {
+            display: block;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo"><i class="fa-solid fa-heart-pulse"></i><h2>MediAlert</h2></div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fa-solid fa-table-columns"></i><span>Dashboard</span></a></li>
+                <li><a href="add-medicine.html"><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a></li>
+                <li><a href="journal.html"><i class="fa-solid fa-book-medical"></i><span>Journal</span></a></li>
+                <li><a href="insight.html"><i class="fa-solid fa-chart-line"></i><span>Health Insights</span></a></li>
+                <li><a href="report.html"><i class="fa-solid fa-file-pdf"></i><span>Report</span></a></li>
+                <li><a href="community.html"><i class="fa-solid fa-users"></i><span>Community</span></a></li>
+                <li><a href="subscription.html"><i class="fa-solid fa-crown"></i><span>Subscription</span></a></li>
+                <li class="active"><a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h1>Settings</h1>
+                <p>Manage your account and application preferences.</p>
+            </header>
+            
+            <div class="settings-layout">
+                <nav class="settings-nav">
+                    <button class="settings-nav-btn active" data-target="profile-settings"><i class="fa-solid fa-user"></i> Profile</button>
+                    <button class="settings-nav-btn" data-target="subscription-settings"><i class="fa-solid fa-crown"></i> Subscription</button>
+                    <button class="settings-nav-btn" data-target="community-settings"><i class="fa-solid fa-users"></i> Community</button>
+                    <button class="settings-nav-btn" data-target="report-settings"><i class="fa-solid fa-file-alt"></i> Report</button>
+                    <button class="settings-nav-btn" data-target="general-settings"><i class="fa-solid fa-sliders-h"></i> General</button>
+                </nav>
+
+                <div class="settings-content">
+                    <!-- Profile Settings -->
+                    <div id="profile-settings" class="settings-panel active card">
+                        <div class="card-header"><h3><i class="fa-solid fa-user-edit"></i> Edit Profile</h3></div>
+                        <div class="form-group"><label for="user-name">Full Name</label><input type="text" id="user-name" value="Alex"></div>
+                        <div class="form-group"><label for="user-email">Email Address</label><input type="email" id="user-email" value="alex@example.com"></div>
+                        <button class="submit-btn">Save Changes</button>
+                    </div>
+
+                    <!-- Subscription Settings -->
+                    <div id="subscription-settings" class="settings-panel card">
+                        <div class="card-header"><h3><i class="fa-solid fa-star"></i> Manage Subscription</h3></div>
+                        <p>You are currently on the <strong>Free Plan</strong>.</p>
+                        <a href="subscription.html" class="submit-btn">Upgrade to Premium</a>
+                    </div>
+
+
+
+
+                    
+
+                    <!-- Community Settings -->
+                    <div id="community-settings" class="settings-panel card">
+                         <div class="card-header"><h3><i class="fa-solid fa-bell"></i> Community Notifications</h3></div>
+                         <div class="form-group">
+                            <label><input type="checkbox" checked> Email me when someone replies to my post.</label><br>
+                            <label><input type="checkbox"> Notify me about upcoming community events.</label>
+                         </div>
+                    </div>
+                    
+                    <!-- Report Settings -->
+                    <div id="report-settings" class="settings-panel card">
+                        <div class="card-header"><h3><i class="fa-solid fa-file-invoice"></i> Report Preferences</h3></div>
+                        <div class="form-group">
+                            <label for="default-report-range">Default Date Range</label>
+                            <select id="default-report-range"><option>Last 7 Days</option><option selected>Last 30 Days</option><option>Last 3 Months</option></select>
+                        </div>
+                    </div>
+                    
+                    <!-- General Settings (Language & Theme) -->
+                    <div id="general-settings" class="settings-panel card">
+                        <div class="card-header"><h3><i class="fa-solid fa-globe"></i> Language & Theme</h3></div>
+                        <div class="form-group">
+                            <label for="language-switcher">Language</label>
+                            <select id="language-switcher"><option value="en">English</option><option value="hi">हिन्दी (Hindi)</option><option value="es">Español (Spanish)</option></select>
+                        </div>
+                         <div class="form-group">
+                            <label for="theme-switcher">Theme</label>
+                            <select id="theme-switcher"><option value="light">Light</option><option value="dark">Dark</option></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.settings-nav-btn');
+            const settingPanels = document.querySelectorAll('.settings-panel');
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    settingPanels.forEach(panel => panel.classList.remove('active'));
+
+                    // Activate clicked button and corresponding panel
+                    button.classList.add('active');
+                    const targetPanel = document.getElementById(button.dataset.target);
+                    if(targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+
+            // Theme switcher logic from your theme.js (can be centralized here)
+            const themeSwitcher = document.getElementById('theme-switcher');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            themeSwitcher.value = currentTheme;
+
+            themeSwitcher.addEventListener('change', (e) => {
+                const selectedTheme = e.target.value;
+                document.documentElement.setAttribute('data-theme', selectedTheme);
+                localStorage.setItem('theme', selectedTheme);
+            });
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Medicine - MediAlert</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+    <style>
+      /* --- TABS & OCR STYLES --- */
+      .tabs {
+        display: flex;
+        gap: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 2rem;
+      }
+      .tab-button {
+        padding: 1rem 1.5rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-light);
+        position: relative;
+        transition: color 0.3s ease;
+      }
+      .tab-button.active {
+        color: var(--primary-color);
+      }
+      .tab-button.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary-color);
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* OCR Scanner Section */
+      #ocr-scanner {
+        text-align: center;
+      }
+      #image-upload-area {
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 3rem;
+        margin-bottom: 1.5rem;
+        cursor: pointer;
+        transition: border-color 0.3s, background-color 0.3s;
+      }
+      #image-upload-area:hover {
+        border-color: var(--primary-color);
+        background-color: var(--bg-color);
+      }
+      #image-upload-area i {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+      #image-upload-area p {
+        margin: 0;
+        font-weight: 500;
+      }
+      #image-preview-container {
+        display: none;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      #prescription-preview {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+      #analysis-result {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 8px;
+        background-color: var(--bg-color);
+        text-align: left;
+        display: none; /* Initially hidden */
+      }
+      #analysis-result h4 {
+        margin-top: 0;
+      }
+      .loader {
+        border: 4px solid var(--bg-color);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 1rem auto;
+        display: none; /* Initially hidden */
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h2>MediAlert</h2>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"
+              ><i class="fa-solid fa-table-columns"></i
+              ><span>Dashboard</span></a
+            >
+          </li>
+          <li class="active">
+            <a href="add-medicine.html"
+              ><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a
+            >
+          </li>
+          <li>
+            <a href="journal.html"
+              ><i class="fa-solid fa-book-medical"></i><span>Journal</span></a
+            >
+          </li>
+          <li>
+            <a href="insight.html"
+              ><i class="fa-solid fa-chart-line"></i
+              ><span>Health Insights</span></a
+            >
+          </li>
+          <!-- NEW COMMUNITY LINK -->
+          <li>
+            <a href="community.html"
+              ><i class="fa-solid fa-users"></i><span>Community</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"
+              ><i class="fa-solid fa-file-pdf"></i><span>Report</span></a
+            >
+          </li>
+
+          <li class="nav-item-premium">
+            <a href="subscription.html"
+              ><i class="fa-solid fa-crown"></i><span>Subscription</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><i class="fa-solid fa-gear"></i><span>Settings</span></a
+            >
+          </li>
+        </ul>
+        <div class="user-profile">
+          <div class="user-info">
+            <h4 id="sidebar-user-name">Guest</h4>
+            <small id="sidebar-user-email">email@example.com</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header>
+          <h1>Add New Medication</h1>
+          <p>Choose to add manually or scan your prescription.</p>
+        </header>
+
+        <div class="tabs">
+          <button class="tab-button active" data-tab="manual-entry">
+            <i class="fa-solid fa-keyboard"></i> Enter Manually
+          </button>
+          <button class="tab-button" data-tab="scan-prescription">
+            <i class="fa-solid fa-camera"></i> Scan Prescription
+          </button>
+        </div>
+
+        <div id="manual-entry" class="tab-content active">
+          <div class="form-container">
+            <form id="new-med-form">
+              <!-- Your existing manual form HTML goes here -->
+              <div class="form-section">
+                <div class="form-group">
+                  <label for="med-name">Medicine Name</label
+                  ><input
+                    type="text"
+                    id="med-name"
+                    placeholder="e.g., Lisinopril"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="med-dosage">Dosage</label
+                  ><input
+                    type="text"
+                    id="med-dosage"
+                    placeholder="e.g., 10mg"
+                  />
+                </div>
+              </div>
+              <div class="form-section">
+                <div class="form-group">
+                  <label for="med-frequency">Frequency</label
+                  ><select id="med-frequency">
+                    <option value="daily">Every Day</option>
+                    <option value="specific_days">Specific Days</option>
+                    <option value="as_needed">As Needed</option>
+                  </select>
+                </div>
+                <div class="form-group day-selector hidden" id="day-selector">
+                  <label>On which days?</label>
+                  <div class="days-checkboxes">
+                    <label
+                      ><input type="checkbox" name="day" value="1" /> M</label
+                    ><label
+                      ><input type="checkbox" name="day" value="2" /> T</label
+                    ><label
+                      ><input type="checkbox" name="day" value="3" /> W</label
+                    ><label
+                      ><input type="checkbox" name="day" value="4" /> T</label
+                    ><label
+                      ><input type="checkbox" name="day" value="5" /> F</label
+                    ><label
+                      ><input type="checkbox" name="day" value="6" /> S</label
+                    ><label
+                      ><input type="checkbox" name="day" value="0" /> S</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <div class="form-group">
+                  <label>At what time(s)?</label>
+                  <div id="time-list">
+                    <input type="time" class="med-time" required />
+                  </div>
+                  <button type="button" id="add-time-btn" class="add-time-btn">
+                    Add another time
+                  </button>
+                </div>
+              </div>
+              <div class="form-actions">
+                <a href="index.html" class="cancel-btn">Cancel</a>
+                <button type="submit" class="submit-btn">
+                  Save Medication
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div id="scan-prescription" class="tab-content">
+          <div class="form-container card" id="ocr-scanner">
+            <input type="file" id="image-input" accept="image/*" hidden />
+            <label for="image-input" id="image-upload-area">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Click to Upload Prescription</p>
+              <small>PNG, JPG, or JPEG</small>
+            </label>
+
+            <div id="image-preview-container">
+              <img
+                id="prescription-preview"
+                src="#"
+                alt="Prescription Preview"
+              />
+            </div>
+
+            <button id="analyze-btn" class="submit-btn" style="display: none">
+              <i class="fa-solid fa-microchip"></i> Analyze Prescription
+            </button>
+
+            <div class="loader" id="loader"></div>
+
+            <div id="analysis-result">
+              <h4>Analysis Result:</h4>
+              <p>
+                Our AI has detected the following medications from your
+                prescription. Please review them and click "Add to Schedule" to
+                save.
+              </p>
+              <!-- Results will be populated here by JS -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="add-medicine.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Tab Switching Logic ---
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+            tabContents.forEach((content) =>
+              content.classList.remove("active")
+            );
+            document.getElementById(button.dataset.tab).classList.add("active");
+          });
+        });
+
+        // --- OCR Feature Logic ---
+        const imageInput = document.getElementById("image-input");
+        const uploadArea = document.getElementById("image-upload-area");
+        const previewContainer = document.getElementById(
+          "image-preview-container"
+        );
+        const previewImage = document.getElementById("prescription-preview");
+        const analyzeBtn = document.getElementById("analyze-btn");
+        const loader = document.getElementById("loader");
+        const resultContainer = document.getElementById("analysis-result");
+
+        imageInput.addEventListener("change", (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              previewImage.src = e.target.result;
+              uploadArea.style.display = "none";
+              previewContainer.style.display = "block";
+              analyzeBtn.style.display = "inline-block";
+              resultContainer.style.display = "none";
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        analyzeBtn.addEventListener("click", () => {
+          analyzeBtn.style.display = "none";
+          loader.style.display = "block";
+          resultContainer.style.display = "none";
+
+          // Simulate AI analysis with a delay
+          setTimeout(() => {
+            loader.style.display = "none";
+            resultContainer.style.display = "block";
+            // In a real app, you would process the image and populate this dynamically
+            resultContainer.innerHTML += `
+                        <div class="med-result">
+                            <p><strong>Medicine:</strong> Paracetamol</p>
+                            <p><strong>Dosage:</strong> 500mg</p>
+                            <p><strong>Frequency:</strong> Twice a day</p>
+                            <button class="submit-btn" style="margin-top: 10px;">Add to Schedule</button>
+                        </div>
+                    `;
+          }, 2500); // 2.5 second delay for simulation
+        });
+      });
+    </script>
+  </body>
+</html>

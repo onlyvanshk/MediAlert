@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediAlert - Subscription Plans</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+    <style>
+      .pricing-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .pricing-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .pricing-header p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      /* --- Billing Toggle Switch --- */
+      .billing-toggle-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        font-weight: 600;
+      }
+      .billing-toggle-container .save-badge {
+        background-color: #dcfce7; /* Green pastel */
+        color: #166534; /* Dark Green */
+        padding: 0.25rem 0.75rem;
+        border-radius: 99px;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--primary-color);
+      }
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      /* --- Pricing Grid and Cards --- */
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      @media (min-width: 992px) {
+        .pricing-grid {
+          grid-template-columns: repeat(3, 1fr);
+          align-items: stretch;
+        }
+      }
+      .pricing-card {
+        background: var(--card-bg-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .pricing-card.highlight {
+        border-color: var(--primary-color);
+        transform: translateY(-10px);
+      }
+      .badge {
+        position: absolute;
+        top: 15px;
+        right: -45px;
+        background: var(--primary-color);
+        color: white;
+        padding: 5px 40px;
+        transform: rotate(45deg);
+        font-weight: 600;
+        font-size: 0.8rem;
+      }
+      .pricing-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+      }
+      .pricing-card .price {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .price .billing-cycle {
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--text-light);
+      }
+      .pricing-card .description {
+        color: var(--text-light);
+        margin-bottom: 2rem;
+        min-height: 40px;
+      }
+      .features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 2rem;
+        flex-grow: 1; /* Makes sure the button aligns at the bottom */
+      }
+      .features li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .features li i {
+        color: var(--secondary-color);
+      }
+      .btn-choose {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 2px solid var(--primary-color);
+        background: var(--primary-color);
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .btn-choose:hover {
+        background: #4338ca;
+        border-color: #4338ca;
+      }
+      .pricing-card.free .btn-choose {
+        background: transparent;
+        color: var(--primary-color);
+      }
+      .pricing-card.free .btn-choose:hover {
+        background: #eef2ff;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h2>MediAlert</h2>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"
+              ><i class="fa-solid fa-table-columns"></i
+              ><span>Dashboard</span></a
+            >
+          </li>
+          <li>
+            <a href="add-medicine.html"
+              ><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a
+            >
+          </li>
+          <li>
+            <a href="journal.html"
+              ><i class="fa-solid fa-book-medical"></i><span>Journal</span></a
+            >
+          </li>
+          <li>
+            <a href="insight.html"
+              ><i class="fa-solid fa-chart-line"></i
+              ><span>Health Insights</span></a
+            >
+          </li>
+          <!-- NEW COMMUNITY LINK -->
+          <li>
+            <a href="community.html"
+              ><i class="fa-solid fa-users"></i><span>Community</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"
+              ><i class="fa-solid fa-file-pdf"></i><span>Report</span></a
+            >
+          </li>
+
+          <li class="active nav-item-premium">
+            <a href="subscription.html"
+              ><i class="fa-solid fa-crown"></i><span>Subscription</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><i class="fa-solid fa-gear"></i><span>Settings</span></a
+            >
+          </li>
+        </ul>
+        <div class="user-profile">
+          <div class="user-info">
+            <h4 id="sidebar-user-name">Guest</h4>
+            <small id="sidebar-user-email">email@example.com</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="pricing-header">
+          <h1>Find the Perfect Plan for You</h1>
+          <p>
+            Upgrade to unlock powerful features that help you and your family
+            stay on top of your health.
+          </p>
+        </div>
+
+        <div class="billing-toggle-container">
+          <span>Monthly</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="billing-toggle" />
+            <span class="slider"></span>
+          </label>
+          <span>Yearly <span class="save-badge">Save 20%</span></span>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Free Plan -->
+          <div class="pricing-card free">
+            <h3>Free</h3>
+            <div class="price">₹0</div>
+            <p class="description">
+              The essentials to track your medications and build healthy habits.
+            </p>
+            <ul class="features">
+              <li><i class="fa-solid fa-check"></i> Medication Reminders</li>
+              <li><i class="fa-solid fa-check"></i> Daily Streak Tracking</li>
+              <li><i class="fa-solid fa-check"></i> Basic Health Journal</li>
+              <li><i class="fa-solid fa-times"></i> Limited PDF Reports</li>
+              <li><i class="fa-solid fa-times"></i> No AI Health Assistant</li>
+              <li><i class="fa-solid fa-times"></i> No Family Monitoring</li>
+            </ul>
+            <button class="btn-choose" disabled>Your Current Plan</button>
+          </div>
+
+          <!-- Individual Plan -->
+          <div class="pricing-card individual">
+            <h3>Individual</h3>
+            <div class="price">
+              <span class="price-monthly">₹49</span>
+              <span class="price-annually hidden">₹499</span>
+              <span class="billing-cycle">/month</span>
+            </div>
+            <p class="description">
+              For the individual focused on achieving their personal health
+              goals.
+            </p>
+            <ul class="features">
+              <li>
+                <i class="fa-solid fa-check"></i> Everything in Free, plus:
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i> <strong>Unlimited</strong> PDF
+                Reports
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <strong>AI Health Assistant</strong>
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i> Advanced Health Insights
+              </li>
+              <li><i class="fa-solid fa-check"></i> Priority Support</li>
+            </ul>
+            <button class="btn-choose">Upgrade Now</button>
+          </div>
+
+          <!-- Family Plan -->
+          <div class="pricing-card family highlight">
+            <div class="badge">Best Value</div>
+            <h3>Family</h3>
+            <div class="price">
+              <span class="price-monthly">₹199</span>
+              <span class="price-annually hidden">₹1999</span>
+              <span class="billing-cycle">/month</span>
+            </div>
+            <p class="description">
+              One plan to manage and monitor the health of your entire family.
+            </p>
+            <ul class="features">
+              <li>
+                <i class="fa-solid fa-check"></i> All Individual features, plus:
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i> Add up to
+                <strong>4 family members</strong>
+              </li>
+              <li><i class="fa-solid fa-check"></i> Shared Health Dashboard</li>
+              <li>
+                <i class="fa-solid fa-check"></i> Monitor loved ones' adherence
+              </li>
+            </ul>
+            <button class="btn-choose">Choose Family</button>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <script>
+      
+      document.addEventListener('DOMContentLoaded', () => {
+    const billingToggle = document.getElementById('billing-toggle');
+    const pricingCards = document.querySelectorAll('.pricing-card:not(.free)');
+    const allCards = document.querySelectorAll('.pricing-card');
+    const chooseButtons = document.querySelectorAll('.btn-choose');
+
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    
+    // If no one is logged in, redirect to the login page
+    if (!loggedInUserEmail) {
+        window.location.href = 'login.html';
+        return; // Stop the script from running further
+    }
+
+    // Load settings specific to the logged-in user
+    const userSettings = JSON.parse(localStorage.getItem(`userSettings_${loggedInUserEmail}`)) || {};
+    const displayName = userSettings.userName || 'Guest';
+    
+    // Update sidebar
+    document.getElementById('sidebar-user-name').textContent = displayName;
+    document.getElementById('sidebar-user-email').textContent = loggedInUserEmail;
+
+    // Function to update prices based on toggle state
+    const updatePrices = () => {
+        const isYearly = billingToggle.checked;
+
+        pricingCards.forEach(card => {
+            const monthlyPriceEl = card.querySelector('.price-monthly');
+            const annuallyPriceEl = card.querySelector('.price-annually');
+            const billingCycleEl = card.querySelector('.billing-cycle');
+
+            if (isYearly) {
+                monthlyPriceEl.classList.add('hidden');
+                annuallyPriceEl.classList.remove('hidden');
+                billingCycleEl.textContent = '/year';
+            } else {
+                monthlyPriceEl.classList.remove('hidden');
+                annuallyPriceEl.classList.add('hidden');
+                billingCycleEl.textContent = '/month';
+            }
+        });
+    };
+
+    // Event listener for the toggle switch
+    billingToggle.addEventListener('change', updatePrices);
+
+    // Event listeners for plan selection
+    chooseButtons.forEach(button => {
+        if (button.disabled) return;
+
+        button.addEventListener('click', () => {
+            const selectedCard = button.closest('.pricing-card');
+
+            allCards.forEach(card => card.classList.remove('highlight'));
+            selectedCard.classList.add('highlight');
+
+            // Optional: Show a confirmation
+            const originalText = button.textContent;
+            button.textContent = 'Plan Selected!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        });
+    });
+
+    // Initial price update on page load
+    updatePrices();
+});
+
+
+      
+      
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Insights | MediAlert</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+
+    <style>
+        /* All your journal-specific styles go here... */
+        [data-theme="dark"] .mood-option.selected {
+            background-color: #374151;
+        }
+        [data-theme="dark"] #journal-thoughts {
+            background-color: #111827;
+        }
+        /* ...etc */
+    </style>
+    <style>
+      /* Additional styles specific to the insights page */
+      .insights-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .time-filters {
+        display: flex;
+        background-color: var(--card-bg-color);
+        padding: 6px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      .time-filters button {
+        padding: 8px 16px;
+        border: none;
+        background-color: transparent;
+        color: var(--text-light);
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+      .time-filters button.active {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .metric-card {
+        background-color: var(--card-bg-color);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+      }
+      .metric-card h4 {
+        color: var(--text-light);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      .metric-card .value {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+      .metric-card .change {
+        font-weight: 500;
+        margin-top: 8px;
+      }
+      .change .fa-arrow-up { color: #ef4444; } /* Red for increase */
+      .change .fa-arrow-down { color: #10b981; } /* Green for decrease */
+      
+      .chart-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      @media (min-width: 1024px) {
+        .chart-grid {
+            grid-template-columns: 2fr 1fr;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h2>MediAlert</h2>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"
+              ><i class="fa-solid fa-table-columns"></i
+              ><span>Dashboard</span></a
+            >
+          </li>
+          <li>
+            <a href="add-medicine.html"
+              ><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a
+            >
+          </li>
+          <li>
+            <a href="journal.html"
+              ><i class="fa-solid fa-book-medical"></i><span>Journal</span></a
+            >
+          </li>
+          <li class="active">
+            <a href="insight.html"
+              ><i class="fa-solid fa-chart-line"></i
+              ><span>Health Insights</span></a
+            >
+          </li>
+            <!-- NEW COMMUNITY LINK -->
+          <li>
+            <a href="community.html"
+              ><i class="fa-solid fa-users"></i><span>Community</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"
+              ><i class="fa-solid fa-file-pdf"></i><span>Report</span></a
+            >
+          </li>
+          
+          <!-- NEW SUBSCRIPTION LINK -->
+          <li class="nav-item-premium">
+            <a href="subscription.html"
+              ><i class="fa-solid fa-crown"></i><span>Subscription</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><i class="fa-solid fa-gear"></i><span>Settings</span></a
+            >
+          </li>
+        </ul>
+        <div class="user-profile">
+          <div class="user-info">
+            <h4 id="sidebar-user-name">Guest</h4>
+            <small id="sidebar-user-email">email@example.com</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="insights-header">
+            <div class="header-text">
+                <h1>Health Insights</h1>
+                <p>An overview of your health trends and medication adherence.</p>
+            </div>
+            <div class="time-filters">
+                <button data-period="weekly" class="active">Weekly</button>
+                <button data-period="monthly">Monthly</button>
+                <button data-period="yearly">Yearly</button>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card" id="metric-adherence">
+                <h4>Medication Adherence</h4>
+                <p class="value">92%</p>
+                <p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-up"></i> 5% from last week</p>
+            </div>
+            <div class="metric-card" id="metric-bp">
+                <h4>Avg. Blood Pressure</h4>
+                <p class="value">124/82 <small>mmHg</small></p>
+                <p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-down"></i> Stable</p>
+            </div>
+            <div class="metric-card" id="metric-bs">
+                <h4>Avg. Blood Sugar</h4>
+                <p class="value">95 <small>mg/dL</small></p>
+                <p class="change" style="color: #ef4444;"><i class="fa-solid fa-arrow-up"></i> 3% from last week</p>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="card" id="bp-chart-card">
+              <h3>Blood Pressure Trend</h3>
+              <div class="chart-container" style="min-height: 350px;">
+                <canvas id="bpTrendChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card" id="adherence-chart-card">
+              <h3>Adherence Overview</h3>
+              <div class="chart-container" style="min-height: 280px;">
+                  <canvas id="adherenceChart"></canvas>
+              </div>
+            </div>
+        </div>
+        
+        <div class="card" id="ai-summary" style="margin-top: 1.5rem;">
+            <h3><i class="fa-solid fa-robot" style="color: var(--primary-color);"></i> AI Summary & Recommendations</h3>
+            <p style="margin-top: 1rem; color: var(--text-light);">
+                Your blood pressure has been consistent and within the normal range this week, which is excellent. Medication adherence is strong at 92%. However, there's a slight upward trend in your average blood sugar.
+                <br><br>
+                <strong>Recommendation:</strong> Continue monitoring your diet closely and consider a brief walk after meals to help stabilize blood sugar levels. Keep up the great work with your medications!
+            </p>
+        </div>
+
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    
+          // If no one is logged in, redirect to the login page
+          if (!loggedInUserEmail) {
+              window.location.href = 'login.html';
+              return; // Stop the script from running further
+          }
+
+          // Load settings specific to the logged-in user
+          const userSettings = JSON.parse(localStorage.getItem(`userSettings_${loggedInUserEmail}`)) || {};
+          const displayName = userSettings.userName || 'Guest';
+          
+          // Update sidebar
+          document.getElementById('sidebar-user-name').textContent = displayName;
+          document.getElementById('sidebar-user-email').textContent = loggedInUserEmail;
+            // --- MOCK DATA FOR DIFFERENT TIME PERIODS ---
+            const insightData = {
+                weekly: {
+                    bpLabels: ['Sep 19', 'Sep 20', 'Sep 21', 'Sep 22', 'Sep 23', 'Sep 24', 'Sep 25'],
+                    systolic: [122, 118, 125, 123, 124, 122, 125],
+                    diastolic: [81, 79, 82, 80, 82, 81, 83],
+                    adherence: [25, 2, 1], // Taken, Skipped, Missed
+                    metrics: {
+                        adherence: '92%',
+                        adherenceChange: '<p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-up"></i> 5% from last week</p>',
+                        avgBP: '124/82 <small>mmHg</small>',
+                        bpChange: '<p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-down"></i> Stable</p>',
+                        avgBS: '95 <small>mg/dL</small>',
+                        bsChange: '<p class="change" style="color: #ef4444;"><i class="fa-solid fa-arrow-up"></i> 3% from last week</p>',
+                    },
+                    aiSummary: "Your blood pressure has been consistent and within the normal range this week, which is excellent. Medication adherence is strong at 92%. However, there's a slight upward trend in your average blood sugar.<br><br><strong>Recommendation:</strong> Continue monitoring your diet closely and consider a brief walk after meals to help stabilize blood sugar levels."
+                },
+                monthly: {
+                    bpLabels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    systolic: [128, 124, 125, 124],
+                    diastolic: [85, 82, 83, 82],
+                    adherence: [110, 12, 5],
+                    metrics: {
+                        adherence: '87%',
+                        adherenceChange: '<p class="change" style="color: #ef4444;"><i class="fa-solid fa-arrow-down"></i> 2% from last month</p>',
+                        avgBP: '125/83 <small>mmHg</small>',
+                        bpChange: '<p class="change" style="color: #ef4444;"><i class="fa-solid fa-arrow-up"></i> Slightly elevated</p>',
+                        avgBS: '102 <small>mg/dL</small>',
+                        bsChange: '<p class="change" style="color: #ef4444;"><i class="fa-solid fa-arrow-up"></i> 6% from last month</p>',
+                    },
+                    aiSummary: "Over the past month, your blood pressure has been slightly higher than the ideal range, and adherence has dipped slightly to 87%. Your average blood sugar is also trending higher.<br><br><strong>Recommendation:</strong> It might be a good time to review your monthly progress with your doctor. Focusing on consistent medication intake, especially on weekends, could significantly improve these numbers."
+                },
+                yearly: {
+                    bpLabels: ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov'],
+                    systolic: [130, 128, 125, 122, 125, 124],
+                    diastolic: [86, 84, 83, 80, 83, 82],
+                    adherence: [1250, 150, 80],
+                    metrics: {
+                        adherence: '85%',
+                        adherenceChange: '<p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-up"></i> 10% from last year</p>',
+                        avgBP: '126/83 <small>mmHg</small>',
+                        bpChange: '<p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-down"></i> Improved</p>',
+                        avgBS: '98 <small>mg/dL</small>',
+                        bsChange: '<p class="change" style="color: #10b981;"><i class="fa-solid fa-arrow-down"></i> 4% from last year</p>',
+                    },
+                    aiSummary: "Looking at the year, there's a clear positive trend. Your average blood pressure and blood sugar have improved, and your medication adherence has increased by 10% compared to last year. This is fantastic progress!<br><br><strong>Recommendation:</strong> Maintain the healthy habits you've built. The data shows your efforts are paying off in the long run. Keep up the consistent effort."
+                }
+            };
+
+            // --- CHART INSTANCES ---
+            let bpChart, adherenceChart;
+
+            // --- FUNCTION TO INITIALIZE CHARTS ---
+            const createCharts = () => {
+                const initialData = insightData.weekly;
+
+                // Blood Pressure Chart
+                const bpCtx = document.getElementById('bpTrendChart').getContext('2d');
+                bpChart = new Chart(bpCtx, {
+                    type: 'line',
+                    data: {
+                        labels: initialData.bpLabels,
+                        datasets: [
+                            { label: 'Systolic (mmHg)', data: initialData.systolic, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)', tension: 0.4, fill: true },
+                            { label: 'Diastolic (mmHg)', data: initialData.diastolic, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.4, fill: true }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false } } }
+                });
+
+                // Adherence Chart
+                const adherenceCtx = document.getElementById('adherenceChart').getContext('2d');
+                adherenceChart = new Chart(adherenceCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Taken', 'Skipped', 'Missed'],
+                        datasets: [{
+                            label: 'Doses',
+                            data: initialData.adherence,
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                            borderColor: 'var(--card-bg-color)',
+                            borderWidth: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            };
+
+            // --- FUNCTION TO UPDATE ALL INSIGHTS ON THE PAGE ---
+            const updateInsights = (period) => {
+                const data = insightData[period];
+                if (!data) return;
+
+                // 1. Update Metric Cards
+                document.querySelector('#metric-adherence .value').innerHTML = data.metrics.adherence;
+                document.querySelector('#metric-adherence .change').innerHTML = data.metrics.adherenceChange;
+                document.querySelector('#metric-bp .value').innerHTML = data.metrics.avgBP;
+                document.querySelector('#metric-bp .change').innerHTML = data.metrics.bpChange;
+                document.querySelector('#metric-bs .value').innerHTML = data.metrics.avgBS;
+                document.querySelector('#metric-bs .change').innerHTML = data.metrics.bsChange;
+                
+                // 2. Update AI Summary
+                document.querySelector('#ai-summary p').innerHTML = data.aiSummary;
+
+                // 3. Update BP Chart
+                bpChart.data.labels = data.bpLabels;
+                bpChart.data.datasets[0].data = data.systolic;
+                bpChart.data.datasets[1].data = data.diastolic;
+                bpChart.update();
+
+                // 4. Update Adherence Chart
+                adherenceChart.data.datasets[0].data = data.adherence;
+                adherenceChart.update();
+            };
+            
+            // --- EVENT LISTENERS FOR TIME FILTERS ---
+            const filterButtons = document.querySelectorAll('.time-filters button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active class
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Get period and update dashboard
+                    const period = button.dataset.period;
+                    updateInsights(period);
+                });
+            });
+
+            // --- INITIALIZE ---
+            createCharts();
+        });
+    </script>
+  </body>
+</html>

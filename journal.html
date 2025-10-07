@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journal | MediAlert</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="theme.js"></script>
+
+    <style>
+      /* All your journal-specific styles go here... */
+      [data-theme="dark"] .mood-option.selected {
+        background-color: #374151;
+      }
+      [data-theme="dark"] #journal-thoughts {
+        background-color: #111827;
+      }
+      /* ...etc */
+    </style>
+    <style>
+      /* Journal Page Specific Styles */
+      .journal-grid {
+        display: flex; /* Mobile-first: flex column */
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      /* Expanded New Journal Entry Card */
+      #journal-entry-form .form-divider {
+        border: 0;
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 1.5rem 0;
+      }
+      #journal-entry-form h4 {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      .mood-selector {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .mood-option {
+        cursor: pointer;
+        transition: transform 0.2s ease, filter 0.2s ease;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        border: 2px solid transparent;
+        padding: 0.5rem;
+        border-radius: 12px;
+        width: 80px;
+      }
+      .mood-option .emoji {
+        font-size: 2.5rem; /* 40px */
+        background-color: var(--bg-color);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mood-option small {
+        font-weight: 500;
+        color: var(--text-light);
+      }
+      .mood-option:hover {
+        transform: translateY(-4px);
+      }
+      .mood-option.selected {
+        border-color: var(--primary-color);
+        background-color: #eef2ff;
+      }
+      [data-theme="dark"] .mood-option.selected {
+        background-color: #374151;
+      }
+
+      .symptom-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .symptom-tag {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
+      }
+      .symptom-tag.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+      #journal-thoughts {
+        width: 100%;
+        min-height: 120px;
+        resize: vertical;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+      }
+      #journal-thoughts:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+      }
+
+      /* Mood History Section */
+      .mood-history-content {
+        display: flex;
+        overflow-x: auto;
+        gap: 1.5rem;
+        padding-bottom: 1rem; /* For scrollbar */
+      }
+      .mood-history-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        flex-shrink: 0;
+      }
+      .mood-history-item .emoji {
+        font-size: 2rem;
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Mood Calendar Section */
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      #month-year {
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+      .calendar-nav button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--text-color);
+        font-size: 1.2rem;
+      }
+      .mood-calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+      .day-name {
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: var(--text-light);
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 40px;
+        position: relative;
+      }
+      .day-cell .date-num {
+        font-size: 0.8rem;
+      }
+      .day-cell .mood-emoji {
+        font-size: 1.2rem;
+      }
+      .day-cell.today .date-num {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ====== PC OPTIMIZED LAYOUT ====== */
+      @media (min-width: 1024px) {
+        .journal-grid {
+          display: grid;
+          grid-template-columns: 2fr 1fr; /* 2 parts for entry, 1 part for sidebar */
+          grid-template-rows: auto auto 1fr; /* Let rows size themselves */
+          grid-template-areas:
+            "entry calendar"
+            "entry history"
+            "entry chart";
+          align-items: flex-start;
+          gap: 1.5rem;
+        }
+
+        #journal-entry-card {
+          grid-area: entry;
+        }
+        #mood-calendar-card {
+          grid-area: calendar;
+        }
+        #mood-history-card {
+          grid-area: history;
+        }
+        #mood-chart-card {
+          grid-area: chart;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h2>MediAlert</h2>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"
+              ><i class="fa-solid fa-table-columns"></i
+              ><span>Dashboard</span></a
+            >
+          </li>
+          <li>
+            <a href="add-medicine.html"
+              ><i class="fa-solid fa-pills"></i><span>Add Medicine</span></a
+            >
+          </li>
+          <li class="active">
+            <a href="journal.html"
+              ><i class="fa-solid fa-book-medical"></i><span>Journal</span></a
+            >
+          </li>
+          <li>
+            <a href="insight.html"
+              ><i class="fa-solid fa-chart-line"></i
+              ><span>Health Insights</span></a
+            >
+          </li>
+            <!-- NEW COMMUNITY LINK -->
+          <li>
+            <a href="community.html"
+              ><i class="fa-solid fa-users"></i><span>Community</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"
+              ><i class="fa-solid fa-file-pdf"></i><span>Report</span></a
+            >
+          </li>
+          <!-- NEW SUBSCRIPTION LINK -->
+          <li class="nav-item-premium">
+            <a href="subscription.html"
+              ><i class="fa-solid fa-crown"></i><span>Subscription</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><i class="fa-solid fa-gear"></i><span>Settings</span></a
+            >
+          </li>
+        </ul>
+        <div class="user-profile">
+          <div class="user-info">
+            <h4 id="sidebar-user-name">Guest</h4>
+            <small id="sidebar-user-email">email@example.com</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header>
+          <h1>Journal</h1>
+          <p>
+            Log your mood, symptoms, and thoughts for today, September 25, 2025.
+          </p>
+        </header>
+
+        <div class="journal-grid" style="margin-top: 1.5rem">
+          <div class="card" id="journal-entry-card">
+            <form id="journal-entry-form">
+              <h4>1. How are you feeling today?</h4>
+              <div class="mood-selector">
+                <div class="mood-option" data-mood="Happy" data-emoji="😊">
+                  <span class="emoji">😊</span><small>Happy</small>
+                </div>
+                <div class="mood-option" data-mood="Calm" data-emoji="😌">
+                  <span class="emoji">😌</span><small>Calm</small>
+                </div>
+                <div class="mood-option" data-mood="Sad" data-emoji="😔">
+                  <span class="emoji">😔</span><small>Sad</small>
+                </div>
+                <div class="mood-option" data-mood="Anxious" data-emoji="😟">
+                  <span class="emoji">😟</span><small>Anxious</small>
+                </div>
+                <div class="mood-option" data-mood="Angry" data-emoji="😠">
+                  <span class="emoji">😠</span><small>Angry</small>
+                </div>
+              </div>
+
+              <hr class="form-divider" />
+
+              <h4>2. Any symptoms?</h4>
+              <div class="symptom-tags">
+                <span class="symptom-tag" data-symptom="Headache"
+                  >Headache</span
+                >
+                <span class="symptom-tag" data-symptom="Fatigue">Fatigue</span>
+                <span class="symptom-tag" data-symptom="Nausea">Nausea</span>
+                <span class="symptom-tag" data-symptom="Chills">Chills</span>
+                <span class="symptom-tag" data-symptom="Dizzy">Dizzy</span>
+              </div>
+
+              <hr class="form-divider" />
+
+              <h4>3. Remarks & Thoughts</h4>
+              <textarea
+                id="journal-thoughts"
+                placeholder="Write about your day, feelings, or anything on your mind..."
+              ></textarea>
+
+              <hr class="form-divider" />
+              <button type="submit" class="submit-btn" style="width: 100%">
+                Save Today's Entry
+              </button>
+            </form>
+          </div>
+
+          <div class="card" id="mood-calendar-card">
+            <div class="calendar-header">
+              <button id="prev-month" class="calendar-nav">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <h3 id="month-year">September 2025</h3>
+              <button id="next-month" class="calendar-nav">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+            <div class="mood-calendar"></div>
+          </div>
+
+          <div class="card" id="mood-history-card">
+            <h3>Mood History</h3>
+            <div class="mood-history-content"></div>
+          </div>
+
+          <div class="card" id="mood-chart-card">
+            <h3>Monthly Overview</h3>
+            <div class="chart-container" style="min-height: 200px">
+              <canvas id="moodChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+
+        const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    
+        // If no one is logged in, redirect to the login page
+        if (!loggedInUserEmail) {
+            window.location.href = 'login.html';
+            return; // Stop the script from running further
+        }
+
+        // Load settings specific to the logged-in user
+        const userSettings = JSON.parse(localStorage.getItem(`userSettings_${loggedInUserEmail}`)) || {};
+        const displayName = userSettings.userName || 'Guest';
+        
+        // Update sidebar
+        document.getElementById('sidebar-user-name').textContent = displayName;
+        document.getElementById('sidebar-user-email').textContent = loggedInUserEmail;
+        
+        // --- MOCK MOOD DATA ---
+        let moodData = {
+          "2025-09-01": "😊",
+          "2025-09-02": "😊",
+          "2025-09-04": "😔",
+          "2025-09-05": "😌",
+          "2025-09-07": "😊",
+          "2025-09-08": "😟",
+          "2025-09-10": "😊",
+          "2025-09-11": "😠",
+          "2025-09-12": "😌",
+          "2025-09-15": "😊",
+          "2025-09-16": "😊",
+          "2025-09-18": "😔",
+          "2025-09-20": "😌",
+          "2025-09-21": "😊",
+          "2025-09-22": "😊",
+          "2025-09-24": "😌",
+        };
+
+        let currentDate = new Date(2025, 8, 25); // Set to today's date for demo
+
+        // --- DOM ELEMENTS ---
+        const moodCalendarEl = document.querySelector(".mood-calendar");
+        const monthYearEl = document.getElementById("month-year");
+        const moodHistoryEl = document.querySelector(".mood-history-content");
+        const journalForm = document.getElementById("journal-entry-form");
+        const moodOptions = document.querySelectorAll(".mood-option");
+        const symptomTags = document.querySelectorAll(".symptom-tag");
+
+        let moodChartInstance; // To hold the chart instance for updates
+        
+
+        // --- UI UPDATE FUNCTIONS ---
+        const generateCalendar = (date) => {
+          /* ... unchanged ... */
+          moodCalendarEl.innerHTML = "";
+          const year = date.getFullYear();
+          const month = date.getMonth();
+          monthYearEl.textContent = `${date.toLocaleString("default", {
+            month: "long",
+          })} ${year}`;
+          const firstDay = new Date(year, month, 1).getDay();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
+          dayNames.forEach((day) => {
+            moodCalendarEl.innerHTML += `<div class="calendar-day day-name">${day}</div>`;
+          });
+          for (let i = 0; i < firstDay; i++) {
+            moodCalendarEl.innerHTML += `<div></div>`;
+          }
+          for (let i = 1; i <= daysInMonth; i++) {
+            const dayKey = `${year}-${String(month + 1).padStart(
+              2,
+              "0"
+            )}-${String(i).padStart(2, "0")}`;
+            const moodEmoji = moodData[dayKey] || "";
+            let todayClass =
+              i === new Date().getDate() &&
+              month === new Date().getMonth() &&
+              year === new Date().getFullYear()
+                ? "today"
+                : "";
+            moodCalendarEl.innerHTML += `<div class="day-cell ${todayClass}"><span class="date-num">${i}</span><span class="mood-emoji">${moodEmoji}</span></div>`;
+          }
+        };
+
+        const populateHistory = () => {
+          /* ... unchanged ... */
+          moodHistoryEl.innerHTML = "";
+          const sortedDates = Object.keys(moodData)
+            .sort((a, b) => new Date(b) - new Date(a))
+            .slice(0, 7);
+          sortedDates.forEach((dateStr) => {
+            const date = new Date(dateStr);
+            const formattedDate = date.toLocaleString("en-US", {
+              month: "short",
+              day: "numeric",
+            });
+            moodHistoryEl.innerHTML += `<div class="mood-history-item"><span class="emoji">${moodData[dateStr]}</span><small>${formattedDate}</small></div>`;
+          });
+        };
+
+        const generateMoodChart = () => {
+          if (moodChartInstance) {
+            moodChartInstance.destroy(); // Destroy old chart before creating new one
+          }
+          const moodCounts = {};
+          Object.values(moodData).forEach((emoji) => {
+            moodCounts[emoji] = (moodCounts[emoji] || 0) + 1;
+          });
+          const chartCtx = document
+            .getElementById("moodChart")
+            .getContext("2d");
+          moodChartInstance = new Chart(chartCtx, {
+            type: "bar",
+            data: {
+              labels: Object.keys(moodCounts),
+              datasets: [
+                {
+                  label: "Days",
+                  data: Object.values(moodCounts),
+                  backgroundColor: [
+                    "#FFCA28",
+                    "#66BB6A",
+                    "#42A5F5",
+                    "#EF5350",
+                    "#AB47BC",
+                  ],
+                  borderWidth: 0,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+              plugins: { legend: { display: false } },
+            },
+          });
+        };
+
+        const updateAllVisuals = () => {
+          generateCalendar(currentDate);
+          populateHistory();
+          generateMoodChart();
+        };
+
+        // --- EVENT LISTENERS ---
+        moodOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            moodOptions.forEach((opt) => opt.classList.remove("selected"));
+            option.classList.add("selected");
+          });
+        });
+
+        symptomTags.forEach((tag) => {
+          tag.addEventListener("click", () => {
+            tag.classList.toggle("active");
+          });
+        });
+
+        journalForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const selectedMoodEl = document.querySelector(
+            ".mood-option.selected"
+          );
+          if (!selectedMoodEl) {
+            alert("Please select a mood.");
+            return;
+          }
+
+          const mood = selectedMoodEl.dataset.mood;
+          const emoji = selectedMoodEl.dataset.emoji;
+          const selectedSymptoms = Array.from(
+            document.querySelectorAll(".symptom-tag.active")
+          ).map((tag) => tag.dataset.symptom);
+          const thoughts = document.getElementById("journal-thoughts").value;
+          const todayKey = `${currentDate.getFullYear()}-${String(
+            currentDate.getMonth() + 1
+          ).padStart(2, "0")}-${String(currentDate.getDate()).padStart(
+            2,
+            "0"
+          )}`;
+
+          // 1. Log the data (for debugging)
+          console.log({
+            date: todayKey,
+            mood,
+            emoji,
+            symptoms: selectedSymptoms,
+            thoughts,
+          });
+
+          // 2. Update the data object
+          moodData[todayKey] = emoji;
+
+          // 3. Update the UI
+          updateAllVisuals();
+
+          // 4. Reset the form
+          selectedMoodEl.classList.remove("selected");
+          symptomTags.forEach((tag) => tag.classList.remove("active"));
+          journalForm.reset();
+        });
+
+        document.getElementById("prev-month").addEventListener("click", () => {
+          currentDate.setMonth(currentDate.getMonth() - 1);
+          generateCalendar(currentDate);
+        });
+        document.getElementById("next-month").addEventListener("click", () => {
+          currentDate.setMonth(currentDate.getMonth() + 1);
+          generateCalendar(currentDate);
+        });
+
+        // --- Initial Load ---
+        updateAllVisuals();
+      });
+    </script>
+  </body>
+</html>
